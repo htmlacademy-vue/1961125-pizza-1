@@ -32,33 +32,18 @@
             <h2 class="title title--small sheet__title">Выберите размер</h2>
 
             <div class="sheet__content diameter">
-              <label class="diameter__input diameter__input--small">
+              <label
+                v-for="size in sizes"
+                :key="`size-${size.id}`"
+                :class="['diameter__input', `diameter__input--${size.type}`]"
+              >
                 <input
-                  type="radio"
-                  name="diameter"
-                  value="small"
+                  v-model="selectedSize"
+                  :value="size.type"
                   class="visually-hidden"
-                />
-                <span>23 см</span>
-              </label>
-              <label class="diameter__input diameter__input--normal">
-                <input
                   type="radio"
-                  name="diameter"
-                  value="normal"
-                  class="visually-hidden"
-                  checked
                 />
-                <span>32 см</span>
-              </label>
-              <label class="diameter__input diameter__input--big">
-                <input
-                  type="radio"
-                  name="diameter"
-                  value="big"
-                  class="visually-hidden"
-                />
-                <span>45 см</span>
+                <span>{{ size.name }}</span>
               </label>
             </div>
           </div>
@@ -507,10 +492,24 @@ const pizzaDoughTypes = new Map([
   ["Толстое", "large"],
 ]);
 
+const pizzaSizesTypes = new Map([
+  [1, "small"],
+  [2, "normal"],
+  [3, "big"],
+]);
+
+console.log(pizzaSizesTypes.get("1"));
+
 const pizzaDoughMapper = (array) =>
   array.map((item) => ({
     ...item,
     type: pizzaDoughTypes.get(item.name),
+  }));
+
+const pizzaSizesMapper = (array) =>
+  array.map((item) => ({
+    ...item,
+    type: pizzaSizesTypes.get(item.multiplier),
   }));
 
 export default {
@@ -518,10 +517,11 @@ export default {
   data() {
     return {
       selectedDough: null,
+      selectedSize: null,
       dough: Object.freeze(pizzaDoughMapper(pizza.dough)),
+      sizes: Object.freeze(pizzaSizesMapper(pizza.sizes)),
       ingredients: Object.freeze(pizza.ingredients),
       sauces: Object.freeze(pizza.sauces),
-      sizes: Object.freeze(pizza.sizes),
     };
   },
   created() {
@@ -531,6 +531,10 @@ export default {
     setSelectedDefaults() {
       this.selectedDough = this.dough.find(
         (doughItem) => doughItem.id === 1
+      )?.type;
+
+      this.selectedSize = this.sizes.find(
+        (doughItem) => doughItem.id === 2
       )?.type;
     },
   },
