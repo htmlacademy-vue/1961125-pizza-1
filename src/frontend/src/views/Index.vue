@@ -59,13 +59,17 @@
               <div class="ingredients__sauce">
                 <p>Основной соус:</p>
 
-                <label class="radio ingredients__input">
-                  <input type="radio" name="sauce" value="tomato" checked />
-                  <span>Томатный</span>
-                </label>
-                <label class="radio ingredients__input">
-                  <input type="radio" name="sauce" value="creamy" />
-                  <span>Сливочный</span>
+                <label
+                  v-for="sauce in sauces"
+                  :key="`sauce-${sauce.id}`"
+                  class="radio ingredients__input"
+                >
+                  <input
+                    v-model="selectedSauce"
+                    :value="sauce.type"
+                    type="radio"
+                  />
+                  <span>{{ sauce.name }}</span>
                 </label>
               </div>
 
@@ -498,7 +502,10 @@ const pizzaSizesTypes = new Map([
   [3, "big"],
 ]);
 
-console.log(pizzaSizesTypes.get("1"));
+const pizzaSousesTypes = new Map([
+  ["Томатный", "tomato"],
+  ["Сливочный", "creamy"],
+]);
 
 const pizzaDoughMapper = (array) =>
   array.map((item) => ({
@@ -512,16 +519,23 @@ const pizzaSizesMapper = (array) =>
     type: pizzaSizesTypes.get(item.multiplier),
   }));
 
+const pizzaSousesMapper = (array) =>
+  array.map((item) => ({
+    ...item,
+    type: pizzaSousesTypes.get(item.name),
+  }));
+
 export default {
   name: "Index",
   data() {
     return {
       selectedDough: null,
       selectedSize: null,
+      selectedSauce: null,
       dough: Object.freeze(pizzaDoughMapper(pizza.dough)),
       sizes: Object.freeze(pizzaSizesMapper(pizza.sizes)),
+      sauces: Object.freeze(pizzaSousesMapper(pizza.sauces)),
       ingredients: Object.freeze(pizza.ingredients),
-      sauces: Object.freeze(pizza.sauces),
     };
   },
   created() {
@@ -534,7 +548,11 @@ export default {
       )?.type;
 
       this.selectedSize = this.sizes.find(
-        (doughItem) => doughItem.id === 2
+        (sizeItem) => sizeItem.id === 2
+      )?.type;
+
+      this.selectedSauce = this.sauces.find(
+        (sauceItem) => sauceItem.id === 1
       )?.type;
     },
   },
