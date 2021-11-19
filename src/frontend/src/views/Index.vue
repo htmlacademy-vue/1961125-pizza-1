@@ -8,19 +8,11 @@
           <div class="sheet">
             <h2 class="title title--small sheet__title">Выберите тесто</h2>
 
-            <div class="sheet__content dough">
-              <BaseRadio
-                v-for="doughItem in dough"
-                :key="`doughItem-${doughItem.id}`"
-                v-model="selectedDough"
-                :value="doughItem.type"
-                :class="['dough__input', `dough__input--${doughItem.type}`]"
-                is-cleared-styles
-              >
-                <b>{{ doughItem.name }}</b>
-                <span>{{ doughItem.description }}</span>
-              </BaseRadio>
-            </div>
+            <BuilderDoughSelector
+              v-model="selectedDough"
+              :dough="dough"
+              class="sheet__content"
+            />
           </div>
         </div>
 
@@ -28,17 +20,11 @@
           <div class="sheet">
             <h2 class="title title--small sheet__title">Выберите размер</h2>
 
-            <div class="sheet__content diameter">
-              <BaseRadio
-                v-for="size in sizes"
-                :key="`size-${size.id}`"
-                v-model="selectedSize"
-                :value="size.type"
-                :label="size.name"
-                :class="['diameter__input', `diameter__input--${size.type}`]"
-                is-cleared-styles
-              />
-            </div>
+            <BuilderSizeSelector
+              v-model="selectedSize"
+              :sizes="sizes"
+              class="sheet__content"
+            />
           </div>
         </div>
 
@@ -48,42 +34,13 @@
               Выберите ингредиенты
             </h2>
 
-            <div class="sheet__content ingredients">
-              <div class="ingredients__sauce">
-                <p>Основной соус:</p>
-
-                <BaseRadio
-                  v-for="sauce in sauces"
-                  :key="`sauce-${sauce.id}`"
-                  v-model="selectedSauce"
-                  :value="sauce.type"
-                  :label="sauce.name"
-                  class="ingredients__input"
-                />
-              </div>
-
-              <div class="ingredients__filling">
-                <p>Начинка:</p>
-
-                <ul class="ingredients__list">
-                  <li
-                    v-for="ingredient in ingredients"
-                    :key="`ingredient-${ingredient.id}`"
-                    class="ingredients__item"
-                  >
-                    <span :class="['filling', `filling--${ingredient.type}`]">
-                      {{ ingredient.name }}
-                    </span>
-
-                    <BaseCounter
-                      v-model="selectedIngredients[ingredient.type]"
-                      class="ingredients__counter"
-                      :min="0"
-                    />
-                  </li>
-                </ul>
-              </div>
-            </div>
+            <BuilderIngredientsSelector
+              :selected-ingredients.sync="selectedIngredients"
+              :selected-sauce.sync="selectedSauce"
+              :ingredients="ingredients"
+              :sauces="sauces"
+              class="sheet__content"
+            />
           </div>
         </div>
 
@@ -98,17 +55,11 @@
           </label>
 
           <div class="content__constructor">
-            <div class="pizza pizza--foundation--big-tomato">
-              <div class="pizza__wrapper">
-                <div class="pizza__filling pizza__filling--ananas"></div>
-                <div class="pizza__filling pizza__filling--bacon"></div>
-                <div class="pizza__filling pizza__filling--cheddar"></div>
-              </div>
-            </div>
+            <BuilderPizzaView />
           </div>
 
           <div class="content__result">
-            <p>Итого: 0 ₽</p>
+            <BuilderPriceCounter />
             <button type="button" class="button" disabled>Готовьте!</button>
           </div>
         </div>
@@ -119,8 +70,11 @@
 
 <script>
 import pizza from "@/static/pizza.json";
-import BaseRadio from "@/common/components/BaseRadio";
-import BaseCounter from "@/common/components/BaseCounter";
+import BuilderDoughSelector from "@/modules/builder/components/BuilderDoughSelector";
+import BuilderSizeSelector from "@/modules/builder/components/BuilderSizeSelector";
+import BuilderIngredientsSelector from "@/modules/builder/components/BuilderIngredientsSelector";
+import BuilderPizzaView from "@/modules/builder/components/BuilderPizzaView";
+import BuilderPriceCounter from "@/modules/builder/components/BuilderPriceCounter";
 
 const pizzaDoughTypes = new Map([
   ["Тонкое", "light"],
@@ -182,7 +136,13 @@ const pizzaIngredientsMapper = (array) =>
 
 export default {
   name: "Index",
-  components: { BaseRadio, BaseCounter },
+  components: {
+    BuilderPriceCounter,
+    BuilderPizzaView,
+    BuilderIngredientsSelector,
+    BuilderSizeSelector,
+    BuilderDoughSelector,
+  },
   data() {
     return {
       selectedDough: null,
