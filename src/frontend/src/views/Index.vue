@@ -75,27 +75,11 @@
                       {{ ingredient.name }}
                     </span>
 
-                    <div class="counter counter--orange ingredients__counter">
-                      <button
-                        type="button"
-                        class="counter__button counter__button--minus"
-                        disabled
-                      >
-                        <span class="visually-hidden">Меньше</span>
-                      </button>
-                      <input
-                        type="text"
-                        name="counter"
-                        class="counter__input"
-                        value="0"
-                      />
-                      <button
-                        type="button"
-                        class="counter__button counter__button--plus"
-                      >
-                        <span class="visually-hidden">Больше</span>
-                      </button>
-                    </div>
+                    <BaseCounter
+                      v-model="selectedIngredients[ingredient.type]"
+                      class="ingredients__counter"
+                      :min="0"
+                    />
                   </li>
                 </ul>
               </div>
@@ -136,6 +120,7 @@
 <script>
 import pizza from "@/static/pizza.json";
 import BaseRadio from "@/common/components/BaseRadio";
+import BaseCounter from "@/common/components/BaseCounter";
 
 const pizzaDoughTypes = new Map([
   ["Тонкое", "light"],
@@ -197,12 +182,13 @@ const pizzaIngredientsMapper = (array) =>
 
 export default {
   name: "Index",
-  components: { BaseRadio },
+  components: { BaseRadio, BaseCounter },
   data() {
     return {
       selectedDough: null,
       selectedSize: null,
       selectedSauce: null,
+      selectedIngredients: {},
       dough: Object.freeze(pizzaDoughMapper(pizza.dough)),
       sizes: Object.freeze(pizzaSizesMapper(pizza.sizes)),
       sauces: Object.freeze(pizzaSousesMapper(pizza.sauces)),
@@ -225,6 +211,10 @@ export default {
       this.selectedSauce = this.sauces.find(
         (sauceItem) => sauceItem.id === 1
       )?.type;
+
+      this.ingredients.forEach((ingredientItem) => {
+        this.$set(this.selectedIngredients, ingredientItem.type, 0);
+      });
     },
   },
 };
