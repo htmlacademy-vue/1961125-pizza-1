@@ -6,7 +6,7 @@
       <BaseRadio
         v-for="sauce in sauces"
         :key="`sauce-${sauce.id}`"
-        v-model="localSelectedSauce"
+        v-model="selectedSauce"
         :value="sauce.type"
         :label="sauce.name"
         class="ingredients__input"
@@ -40,48 +40,46 @@
 <script>
 import BaseCounter from "@/common/components/BaseCounter";
 import BaseRadio from "@/common/components/BaseRadio";
+import pizza from "@/static/pizza.json";
+import { sousesMapper, ingredientsMapper } from "../helpers";
 
 export default {
   name: "BuilderIngredientsSelector",
   components: { BaseCounter, BaseRadio },
-  props: {
-    selectedIngredients: {
-      type: Object,
-      required: true,
-    },
-    selectedSauce: {
-      type: String,
-      required: true,
-    },
-    ingredients: {
-      type: Array,
-      required: true,
-      validator: (value) => value.length > 0,
-    },
-    sauces: {
-      type: Array,
-      required: true,
-      validator: (value) => value.length > 0,
-    },
+  data() {
+    return {
+      selectedSauce: null,
+      selectedIngredients: {},
+      sauces: Object.freeze(sousesMapper(pizza.sauces)),
+      ingredients: Object.freeze(ingredientsMapper(pizza.ingredients)),
+    };
   },
-  computed: {
-    localSelectedSauce: {
-      get() {
-        return this.selectedSauce;
-      },
-      set(value) {
-        console.log("selectedSauce");
-        this.$emit("update:selectedSauce", value);
-      },
-    },
+  created() {
+    this.setDefaults();
   },
   methods: {
+    setDefaults() {
+      this.selectedSauce = this.sauces.find(
+        (sauceItem) => sauceItem.id === 1
+      )?.type;
+
+      this.ingredients.forEach((ingredientItem) => {
+        this.$set(this.selectedIngredients, ingredientItem.type, 0);
+      });
+    },
     updateSelectedIngredients(key, value) {
-      const localSelectedIngredients = this.selectedIngredients;
-
-      localSelectedIngredients[key] = value;
-
-      this.$emit("update:selectedIngredients", localSelectedIngredients);
+      this.selectedIngredients[key] = value;
+    },
+  },
+  watch: {
+    selectedSauce(value) {
+      this.$emit("sauce-select", value);
+    },
+    selectedIngredients: {
+      deep: true,
+      handler(value) {
+        this.$emit("ingredients-select", value);
+      },
     },
   },
 };

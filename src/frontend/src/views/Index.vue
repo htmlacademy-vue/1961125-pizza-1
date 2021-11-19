@@ -9,9 +9,8 @@
             <h2 class="title title--small sheet__title">Выберите тесто</h2>
 
             <BuilderDoughSelector
-              v-model="selectedDough"
-              :dough="dough"
               class="sheet__content"
+              @dough-select="setPizzaDataValue('dough', $event)"
             />
           </div>
         </div>
@@ -21,9 +20,8 @@
             <h2 class="title title--small sheet__title">Выберите размер</h2>
 
             <BuilderSizeSelector
-              v-model="selectedSize"
-              :sizes="sizes"
               class="sheet__content"
+              @size-select="setPizzaDataValue('size', $event)"
             />
           </div>
         </div>
@@ -35,11 +33,9 @@
             </h2>
 
             <BuilderIngredientsSelector
-              :selected-ingredients.sync="selectedIngredients"
-              :selected-sauce.sync="selectedSauce"
-              :ingredients="ingredients"
-              :sauces="sauces"
               class="sheet__content"
+              @ingredients-select="setPizzaDataValue('ingredients', $event)"
+              @sauce-select="setPizzaDataValue('sauce', $event)"
             />
           </div>
         </div>
@@ -69,70 +65,11 @@
 </template>
 
 <script>
-import pizza from "@/static/pizza.json";
 import BuilderDoughSelector from "@/modules/builder/components/BuilderDoughSelector";
 import BuilderSizeSelector from "@/modules/builder/components/BuilderSizeSelector";
 import BuilderIngredientsSelector from "@/modules/builder/components/BuilderIngredientsSelector";
 import BuilderPizzaView from "@/modules/builder/components/BuilderPizzaView";
 import BuilderPriceCounter from "@/modules/builder/components/BuilderPriceCounter";
-
-const pizzaDoughTypes = new Map([
-  ["Тонкое", "light"],
-  ["Толстое", "large"],
-]);
-
-const pizzaSizesTypes = new Map([
-  [1, "small"],
-  [2, "normal"],
-  [3, "big"],
-]);
-
-const pizzaSousesTypes = new Map([
-  ["Томатный", "tomato"],
-  ["Сливочный", "creamy"],
-]);
-
-const pizzaIngredientsTypes = new Map([
-  ["Грибы", "mushrooms"],
-  ["Чеддер", "cheddar"],
-  ["Салями", "salami"],
-  ["Ветчина", "ham"],
-  ["Ананас", "ananas"],
-  ["Бекон", "bacon"],
-  ["Лук", "onion"],
-  ["Чили", "chile"],
-  ["Халапеньо", "jalapeno"],
-  ["Маслины", "olives"],
-  ["Томаты", "tomatoes"],
-  ["Лосось", "salmon"],
-  ["Моцарелла", "mozzarella"],
-  ["Пармезан", "parmesan"],
-  ["Блю чиз", "blue_cheese"],
-]);
-
-const pizzaDoughMapper = (array) =>
-  array.map((item) => ({
-    ...item,
-    type: pizzaDoughTypes.get(item.name),
-  }));
-
-const pizzaSizesMapper = (array) =>
-  array.map((item) => ({
-    ...item,
-    type: pizzaSizesTypes.get(item.multiplier),
-  }));
-
-const pizzaSousesMapper = (array) =>
-  array.map((item) => ({
-    ...item,
-    type: pizzaSousesTypes.get(item.name),
-  }));
-
-const pizzaIngredientsMapper = (array) =>
-  array.map((item) => ({
-    ...item,
-    type: pizzaIngredientsTypes.get(item.name),
-  }));
 
 export default {
   name: "Index",
@@ -145,36 +82,17 @@ export default {
   },
   data() {
     return {
-      selectedDough: null,
-      selectedSize: null,
-      selectedSauce: null,
-      selectedIngredients: {},
-      dough: Object.freeze(pizzaDoughMapper(pizza.dough)),
-      sizes: Object.freeze(pizzaSizesMapper(pizza.sizes)),
-      sauces: Object.freeze(pizzaSousesMapper(pizza.sauces)),
-      ingredients: Object.freeze(pizzaIngredientsMapper(pizza.ingredients)),
+      pizzaData: {
+        dough: null,
+        size: null,
+        sauce: null,
+        ingredients: {},
+      },
     };
   },
-  created() {
-    this.setSelectedDefaults();
-  },
   methods: {
-    setSelectedDefaults() {
-      this.selectedDough = this.dough.find(
-        (doughItem) => doughItem.id === 1
-      )?.type;
-
-      this.selectedSize = this.sizes.find(
-        (sizeItem) => sizeItem.id === 2
-      )?.type;
-
-      this.selectedSauce = this.sauces.find(
-        (sauceItem) => sauceItem.id === 1
-      )?.type;
-
-      this.ingredients.forEach((ingredientItem) => {
-        this.$set(this.selectedIngredients, ingredientItem.type, 0);
-      });
+    setPizzaDataValue(key, value) {
+      this.pizzaData[key] = value;
     },
   },
 };

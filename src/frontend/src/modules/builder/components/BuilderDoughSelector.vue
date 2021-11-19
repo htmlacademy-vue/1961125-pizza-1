@@ -3,7 +3,7 @@
     <BaseRadio
       v-for="doughItem in dough"
       :key="`doughItem-${doughItem.id}`"
-      v-model="localValue"
+      v-model="selectedDough"
       :value="doughItem.type"
       :class="['dough__input', `dough__input--${doughItem.type}`]"
       is-cleared-styles
@@ -16,29 +16,31 @@
 
 <script>
 import BaseRadio from "@/common/components/BaseRadio";
+import pizza from "@/static/pizza.json";
+import { doughMapper } from "../helpers";
 
 export default {
   name: "BuilderDoughSelector",
   components: { BaseRadio },
-  props: {
-    dough: {
-      type: Array,
-      required: true,
-      validator: (value) => value.length > 0,
-    },
-    value: {
-      type: String,
-      required: true,
+  data() {
+    return {
+      selectedDough: null,
+      dough: Object.freeze(doughMapper(pizza.dough)),
+    };
+  },
+  created() {
+    this.setDefaults();
+  },
+  methods: {
+    setDefaults() {
+      this.selectedDough = this.dough.find(
+        (doughItem) => doughItem.id === 1
+      )?.type;
     },
   },
-  computed: {
-    localValue: {
-      get() {
-        return this.value;
-      },
-      set(value) {
-        this.$emit("input", value);
-      },
+  watch: {
+    selectedDough(value) {
+      this.$emit("dough-select", value);
     },
   },
 };
