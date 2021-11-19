@@ -31,3 +31,5 @@ export const ingredientsTypes = new Map([
   ["Пармезан", "parmesan"],
   ["Блю чиз", "blue_cheese"],
 ]);
+
+export const maxSameIngredientsCount = 3;

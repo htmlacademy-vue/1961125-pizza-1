@@ -51,7 +51,12 @@
           </label>
 
           <div class="content__constructor">
-            <BuilderPizzaView />
+            <BuilderPizzaView
+              v-if="pizzaData.dough && pizzaData.sauce"
+              :selected-dough="pizzaData.dough"
+              :selected-sauce="pizzaData.sauce"
+              :selected-ingredients="pizzaData.ingredients"
+            />
           </div>
 
           <div class="content__result">

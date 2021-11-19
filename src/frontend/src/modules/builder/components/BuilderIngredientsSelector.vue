@@ -22,7 +22,11 @@
           :key="`ingredient-${ingredient.id}`"
           class="ingredients__item"
         >
-          <span :class="['filling', `filling--${ingredient.type}`]">
+          <span
+            :class="['filling', `filling--${ingredient.type}`]"
+            :draggable="selectedIngredients[ingredient.type] < 3"
+            @dragstart="onDragstart($event, ingredient.type)"
+          >
             {{ ingredient.name }}
           </span>
 
@@ -30,6 +34,7 @@
             :value="selectedIngredients[ingredient.type]"
             class="ingredients__counter"
             :min="0"
+            :max="maxSameIngredientsCount"
             @input="updateSelectedIngredients(ingredient.type, $event)"
           />
         </li>
@@ -42,6 +47,7 @@ import BaseCounter from "@/common/components/BaseCounter";
 import BaseRadio from "@/common/components/BaseRadio";
 import pizza from "@/static/pizza.json";
 import { sousesMapper, ingredientsMapper } from "../helpers";
+import { maxSameIngredientsCount } from "../constants";
 
 export default {
   name: "BuilderIngredientsSelector",
@@ -56,6 +62,13 @@ export default {
   },
   created() {
     this.setDefaults();
+
+    this.maxSameIngredientsCount = maxSameIngredientsCount;
+
+    this.$eventBus.$on("increase-ingredient", (type) => {
+      console.log(this.selectedIngredients[type]);
+      this.selectedIngredients[type] += 1;
+    });
   },
   methods: {
     setDefaults() {
@@ -69,6 +82,9 @@ export default {
     },
     updateSelectedIngredients(key, value) {
       this.selectedIngredients[key] = value;
+    },
+    onDragstart(e, ingredientType) {
+      e.dataTransfer.setData("ingredientType", ingredientType);
     },
   },
   watch: {
