@@ -9,20 +9,17 @@
             <h2 class="title title--small sheet__title">Выберите тесто</h2>
 
             <div class="sheet__content dough">
-              <label
+              <BaseRadio
                 v-for="doughItem in dough"
                 :key="`doughItem-${doughItem.id}`"
+                v-model="selectedDough"
+                :value="doughItem.type"
                 :class="['dough__input', `dough__input--${doughItem.type}`]"
+                is-cleared-styles
               >
-                <input
-                  v-model="selectedDough"
-                  :value="doughItem.type"
-                  class="visually-hidden"
-                  type="radio"
-                />
                 <b>{{ doughItem.name }}</b>
                 <span>{{ doughItem.description }}</span>
-              </label>
+              </BaseRadio>
             </div>
           </div>
         </div>
@@ -32,19 +29,15 @@
             <h2 class="title title--small sheet__title">Выберите размер</h2>
 
             <div class="sheet__content diameter">
-              <label
+              <BaseRadio
                 v-for="size in sizes"
                 :key="`size-${size.id}`"
+                v-model="selectedSize"
+                :value="size.type"
+                :label="size.name"
                 :class="['diameter__input', `diameter__input--${size.type}`]"
-              >
-                <input
-                  v-model="selectedSize"
-                  :value="size.type"
-                  class="visually-hidden"
-                  type="radio"
-                />
-                <span>{{ size.name }}</span>
-              </label>
+                is-cleared-styles
+              />
             </div>
           </div>
         </div>
@@ -59,18 +52,14 @@
               <div class="ingredients__sauce">
                 <p>Основной соус:</p>
 
-                <label
+                <BaseRadio
                   v-for="sauce in sauces"
                   :key="`sauce-${sauce.id}`"
-                  class="radio ingredients__input"
-                >
-                  <input
-                    v-model="selectedSauce"
-                    :value="sauce.type"
-                    type="radio"
-                  />
-                  <span>{{ sauce.name }}</span>
-                </label>
+                  v-model="selectedSauce"
+                  :value="sauce.type"
+                  :label="sauce.name"
+                  class="ingredients__input"
+                />
               </div>
 
               <div class="ingredients__filling">
@@ -146,6 +135,7 @@
 
 <script>
 import pizza from "@/static/pizza.json";
+import BaseRadio from "@/common/components/BaseRadio";
 
 const pizzaDoughTypes = new Map([
   ["Тонкое", "light"],
@@ -207,6 +197,7 @@ const pizzaIngredientsMapper = (array) =>
 
 export default {
   name: "Index",
+  components: { BaseRadio },
   data() {
     return {
       selectedDough: null,
