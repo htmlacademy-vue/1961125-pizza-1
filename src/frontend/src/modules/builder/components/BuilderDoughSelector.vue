@@ -28,6 +28,11 @@ export default {
       dough: Object.freeze(doughMapper(pizza.dough)),
     };
   },
+  watch: {
+    selectedDough(value) {
+      this.$emit("dough-select", value);
+    },
+  },
   created() {
     this.setDefaults();
   },
@@ -36,11 +41,6 @@ export default {
       this.selectedDough = this.dough.find(
         (doughItem) => doughItem.id === 1
       )?.type;
-    },
-  },
-  watch: {
-    selectedDough(value) {
-      this.$emit("dough-select", value);
     },
   },
 };

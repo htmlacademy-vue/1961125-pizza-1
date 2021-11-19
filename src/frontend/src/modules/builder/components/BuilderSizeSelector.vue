@@ -35,6 +35,11 @@ export default {
       },
     },
   },
+  watch: {
+    selectedSize(value) {
+      this.$emit("size-select", value);
+    },
+  },
   created() {
     this.setDefaults();
   },
@@ -43,11 +48,6 @@ export default {
       this.selectedSize = this.sizes.find(
         (sizeItem) => sizeItem.id === 2
       )?.type;
-    },
-  },
-  watch: {
-    selectedSize(value) {
-      this.$emit("size-select", value);
     },
   },
 };

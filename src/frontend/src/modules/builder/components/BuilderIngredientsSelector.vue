@@ -60,6 +60,17 @@ export default {
       ingredients: Object.freeze(ingredientsMapper(pizza.ingredients)),
     };
   },
+  watch: {
+    selectedSauce(value) {
+      this.$emit("sauce-select", value);
+    },
+    selectedIngredients: {
+      deep: true,
+      handler(value) {
+        this.$emit("ingredients-select", value);
+      },
+    },
+  },
   created() {
     this.setDefaults();
 
@@ -85,17 +96,6 @@ export default {
     },
     onDragstart(e, ingredientType) {
       e.dataTransfer.setData("ingredientType", ingredientType);
-    },
-  },
-  watch: {
-    selectedSauce(value) {
-      this.$emit("sauce-select", value);
-    },
-    selectedIngredients: {
-      deep: true,
-      handler(value) {
-        this.$emit("ingredients-select", value);
-      },
     },
   },
 };
