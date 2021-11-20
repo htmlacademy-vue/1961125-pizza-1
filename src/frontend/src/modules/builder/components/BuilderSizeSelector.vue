@@ -13,27 +13,20 @@
 </template>
 <script>
 import BaseRadio from "@/common/components/BaseRadio";
-import pizza from "@/static/pizza.json";
-import { sizesMapper } from "../helpers";
 
 export default {
   name: "BuilderSizeSelector",
   components: { BaseRadio },
+  props: {
+    sizes: {
+      type: Array,
+      required: true,
+    },
+  },
   data() {
     return {
       selectedSize: null,
-      sizes: Object.freeze(sizesMapper(pizza.sizes)),
     };
-  },
-  computed: {
-    localValue: {
-      get() {
-        return this.value;
-      },
-      set(value) {
-        this.$emit("input", value);
-      },
-    },
   },
   watch: {
     selectedSize(value) {

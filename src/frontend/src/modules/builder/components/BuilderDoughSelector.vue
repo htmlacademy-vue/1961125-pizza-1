@@ -16,16 +16,19 @@
 
 <script>
 import BaseRadio from "@/common/components/BaseRadio";
-import pizza from "@/static/pizza.json";
-import { doughMapper } from "../helpers";
 
 export default {
   name: "BuilderDoughSelector",
   components: { BaseRadio },
+  props: {
+    dough: {
+      type: Array,
+      required: true,
+    },
+  },
   data() {
     return {
       selectedDough: null,
-      dough: Object.freeze(doughMapper(pizza.dough)),
     };
   },
   watch: {

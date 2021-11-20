@@ -45,19 +45,25 @@
 <script>
 import BaseCounter from "@/common/components/BaseCounter";
 import BaseRadio from "@/common/components/BaseRadio";
-import pizza from "@/static/pizza.json";
-import { sousesMapper, ingredientsMapper } from "../helpers";
 import { maxSameIngredientsCount } from "../constants";
 
 export default {
   name: "BuilderIngredientsSelector",
   components: { BaseCounter, BaseRadio },
+  props: {
+    sauces: {
+      type: Array,
+      required: true,
+    },
+    ingredients: {
+      type: Array,
+      required: true,
+    },
+  },
   data() {
     return {
       selectedSauce: null,
       selectedIngredients: {},
-      sauces: Object.freeze(sousesMapper(pizza.sauces)),
-      ingredients: Object.freeze(ingredientsMapper(pizza.ingredients)),
     };
   },
   watch: {
@@ -77,7 +83,6 @@ export default {
     this.maxSameIngredientsCount = maxSameIngredientsCount;
 
     this.$eventBus.$on("increase-ingredient", (type) => {
-      console.log(this.selectedIngredients[type]);
       this.selectedIngredients[type] += 1;
     });
   },
