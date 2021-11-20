@@ -55,6 +55,8 @@
   }
 
   input {
+    display: none;
+
     &:checked + b::before {
       box-shadow: $shadow-large;
     }

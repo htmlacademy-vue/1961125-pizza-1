@@ -140,4 +140,10 @@
   &:focus {
     box-shadow: inset $shadow-regular;
   }
+
+  &::-webkit-inner-spin-button,
+  &::-webkit-outer-spin-button {
+    appearance: none;
+    margin: 0;
+  }
 }
