@@ -1,5 +1,5 @@
 <template>
-  <form method="post" class="layout-form">
+  <form class="layout-form">
     <main class="content cart">
       <div class="container">
         <div class="cart__title">
@@ -252,7 +252,7 @@
             <label class="cart-form__select">
               <span class="cart-form__label">Получение заказа:</span>
 
-              <select name="test" class="select">
+              <select class="select">
                 <option value="1">Заберу сам</option>
                 <option value="2">Новый адрес</option>
                 <option value="3">Дом</option>
@@ -294,9 +294,9 @@
     </main>
     <section class="footer">
       <div class="footer__more">
-        <a href="#" class="button button--border button--arrow"
-          >Хочу еще одну</a
-        >
+        <router-link to="/" class="button button--border button--arrow">
+          Хочу еще одну
+        </router-link>
       </div>
       <p class="footer__text">
         Перейти к конструктору<br />чтоб собрать ещё одну пиццу
