@@ -22,12 +22,12 @@
 </template>
 
 <script>
+import { sidebarLinks } from "@/common/constants";
+
 export default {
   name: "AppSidebar",
-  computed: {
-    links() {
-      return this.$route.meta?.sidebarLinks || [];
-    },
+  created() {
+    this.links = sidebarLinks;
   },
 };
 </script>

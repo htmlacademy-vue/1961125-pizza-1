@@ -10,6 +10,7 @@ module.exports = {
   rules: {
     "no-console": process.env.NODE_ENV === "production" ? "warn" : "off",
     "no-debugger": process.env.NODE_ENV === "production" ? "warn" : "off",
+    // TODO: добавить правильно vue/max-attributes-per-line = 1
   },
   overrides: [
     {

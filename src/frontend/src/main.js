@@ -7,6 +7,7 @@ Vue.component("Fragment", Fragment);
 
 Vue.config.productionTip = false;
 
+// TODO: удалить с приходом Vuex
 Vue.prototype.$eventBus = new Vue();
 
 new Vue({

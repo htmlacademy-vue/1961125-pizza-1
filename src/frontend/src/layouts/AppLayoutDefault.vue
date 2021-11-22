@@ -1,7 +1,7 @@
 <template>
   <fragment>
     <AppHeader />
-    <slot></slot>
+    <slot />
   </fragment>
 </template>
 
