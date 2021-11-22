@@ -14,7 +14,7 @@
       <router-link to="/cart">0 ₽</router-link>
     </div>
     <div class="header__user">
-      <router-link to="login" class="header__login">
+      <router-link to="/login" class="header__login">
         <span>Войти</span>
       </router-link>
     </div>

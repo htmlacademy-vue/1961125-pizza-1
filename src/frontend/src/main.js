@@ -1,6 +1,9 @@
 import Vue from "vue";
+import { Fragment } from "vue-frag";
 import App from "./App.vue";
 import router from "./router";
+
+Vue.component("Fragment", Fragment);
 
 Vue.config.productionTip = false;
 
