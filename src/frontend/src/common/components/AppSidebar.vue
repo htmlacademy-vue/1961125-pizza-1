@@ -10,7 +10,7 @@
     </router-link>
 
     <router-link
-      v-for="(link, index) in links"
+      v-for="(link, index) in sidebarLinks"
       :key="`sidebar-link-${index}`"
       class="layout__link"
       active-class="layout__link--active"
@@ -22,12 +22,12 @@
 </template>
 
 <script>
-import { sidebarLinks } from "@/common/constants";
+import { mapState } from "vuex";
 
 export default {
   name: "AppSidebar",
-  created() {
-    this.links = sidebarLinks;
+  computed: {
+    ...mapState(["sidebarLinks"]),
   },
 };
 </script>
