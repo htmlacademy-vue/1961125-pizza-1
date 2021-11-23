@@ -33,3 +33,4 @@ export const ingredientsTypes = new Map([
 ]);
 
 export const maxSameIngredientsCount = 3;
+export const minPizzaNameLength = 3;

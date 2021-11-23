@@ -1,5 +1,5 @@
 <template>
-  <main class="content">
+  <main class="content" v-if="isPizzaTypesLoaded">
     <form action="#" method="post">
       <div class="content__wrapper">
         <h1 class="title title--big">Конструктор пиццы</h1>
@@ -8,11 +8,7 @@
           <div class="sheet">
             <h2 class="title title--small sheet__title">Выберите тесто</h2>
 
-            <BuilderDoughSelector
-              :dough="pizzaStore.dough"
-              class="sheet__content"
-              @dough-select="setPizzaDataValue('dough', $event)"
-            />
+            <BuilderDoughSelector class="sheet__content" />
           </div>
         </div>
 
@@ -20,11 +16,7 @@
           <div class="sheet">
             <h2 class="title title--small sheet__title">Выберите размер</h2>
 
-            <BuilderSizeSelector
-              :sizes="pizzaStore.sizes"
-              class="sheet__content"
-              @size-select="setPizzaDataValue('size', $event)"
-            />
+            <BuilderSizeSelector class="sheet__content" />
           </div>
         </div>
 
@@ -34,13 +26,7 @@
               Выберите ингредиенты
             </h2>
 
-            <BuilderIngredientsSelector
-              :ingredients="pizzaStore.ingredients"
-              :sauces="pizzaStore.sauces"
-              class="sheet__content"
-              @ingredients-select="setPizzaDataValue('ingredients', $event)"
-              @sauce-select="setPizzaDataValue('sauce', $event)"
-            />
+            <BuilderIngredientsSelector class="sheet__content" />
           </div>
         </div>
 
@@ -48,6 +34,7 @@
           <label class="input">
             <span class="visually-hidden">Название пиццы</span>
             <input
+              v-model="localSelectedPizzaName"
               type="text"
               name="pizza_name"
               placeholder="Введите название пиццы"
@@ -55,17 +42,19 @@
           </label>
 
           <div class="content__constructor">
-            <BuilderPizzaView
-              v-if="pizzaData.dough && pizzaData.sauce"
-              :selected-dough="pizzaData.dough"
-              :selected-sauce="pizzaData.sauce"
-              :selected-ingredients="pizzaData.ingredients"
-            />
+            <BuilderPizzaView />
           </div>
 
           <div class="content__result">
-            <BuilderPriceCounter :price="price" />
-            <button type="button" class="button" disabled>Готовьте!</button>
+            <BuilderPriceCounter />
+            <button
+              type="button"
+              class="button"
+              :disabled="!isPizzaReadyToBuy"
+              @click="addToCart"
+            >
+              Готовьте!
+            </button>
           </div>
         </div>
       </div>
@@ -74,13 +63,14 @@
 </template>
 
 <script>
-import BuilderDoughSelector from "@/modules/builder/components/BuilderDoughSelector";
-import BuilderSizeSelector from "@/modules/builder/components/BuilderSizeSelector";
-import BuilderIngredientsSelector from "@/modules/builder/components/BuilderIngredientsSelector";
-import BuilderPizzaView from "@/modules/builder/components/BuilderPizzaView";
-import BuilderPriceCounter from "@/modules/builder/components/BuilderPriceCounter";
-import { calculatePrice, getPizzaStore } from "@/modules/builder/helpers";
-import { debounce } from "lodash";
+import { mapActions, mapGetters, mapState } from "vuex";
+import {
+  BuilderDoughSelector,
+  BuilderSizeSelector,
+  BuilderIngredientsSelector,
+  BuilderPizzaView,
+  BuilderPriceCounter,
+} from "@/modules/builder/components";
 
 export default {
   name: "Index",
@@ -91,35 +81,34 @@ export default {
     BuilderSizeSelector,
     BuilderDoughSelector,
   },
-  data() {
-    return {
-      price: 0,
-      pizzaData: {
-        dough: null,
-        size: null,
-        sauce: null,
-        ingredients: {},
+  computed: {
+    ...mapState("Builder", ["selectedPizzaName"]),
+    ...mapGetters("Builder", [
+      "isPizzaTypesLoaded",
+      "isPizzaReadyToBuy",
+      "pizzaData",
+    ]),
+
+    localSelectedPizzaName: {
+      get() {
+        return this.selectedPizzaName;
       },
-      pizzaStore: Object.freeze(getPizzaStore()),
-    };
+      set(value) {
+        this.setSelectedPizzaName(value);
+      },
+    },
   },
   methods: {
-    async setPizzaDataValue(key, value) {
-      this.pizzaData[key] = value;
+    ...mapActions("Builder", ["setSelectedPizzaName", "setPizzaDataToDefault"]),
+    ...mapActions("Cart", ["addToList"]),
 
-      this.debouncedCalculatePrice(
-        this.pizzaData.dough,
-        this.pizzaData.size,
-        this.pizzaData.sauce,
-        this.pizzaData.ingredients,
-        this.pizzaStore
-      );
+    addToCart() {
+      this.addToList(this.pizzaData);
+      this.$router.push({ name: "Cart" });
     },
   },
   created() {
-    this.debouncedCalculatePrice = debounce((...args) => {
-      this.price = calculatePrice(...args);
-    }, 10);
+    this.setPizzaDataToDefault();
   },
 };
 </script>

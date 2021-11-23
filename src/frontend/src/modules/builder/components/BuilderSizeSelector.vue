@@ -1,47 +1,37 @@
 <template>
   <div class="diameter">
     <BaseRadio
-      v-for="size in sizes"
-      :key="`size-${size.id}`"
-      v-model="selectedSize"
-      :value="size.type"
-      :label="size.name"
-      :class="['diameter__input', `diameter__input--${size.type}`]"
+      v-for="sizeType in sizesTypes"
+      :key="`size-${sizeType.id}`"
+      v-model="localSelectedSize"
+      :value="sizeType.type"
+      :label="sizeType.name"
+      :class="['diameter__input', `diameter__input--${sizeType.type}`]"
       is-cleared-styles
     />
   </div>
 </template>
 <script>
 import BaseRadio from "@/common/components/BaseRadio";
+import { mapState, mapActions } from "vuex";
 
 export default {
   name: "BuilderSizeSelector",
   components: { BaseRadio },
-  props: {
-    sizes: {
-      type: Array,
-      required: true,
+  computed: {
+    ...mapState("Builder", ["sizesTypes", "selectedSize"]),
+
+    localSelectedSize: {
+      get() {
+        return this.selectedSize;
+      },
+      set(value) {
+        this.setSelectedSize(value);
+      },
     },
-  },
-  data() {
-    return {
-      selectedSize: null,
-    };
-  },
-  watch: {
-    selectedSize(value) {
-      this.$emit("size-select", value);
-    },
-  },
-  created() {
-    this.setDefaults();
   },
   methods: {
-    setDefaults() {
-      this.selectedSize = this.sizes.find(
-        (sizeItem) => sizeItem.id === 2
-      )?.type;
-    },
+    ...mapActions("Builder", ["setSelectedSize"]),
   },
 };
 </script>

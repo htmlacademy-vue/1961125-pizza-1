@@ -26,35 +26,30 @@
 </template>
 
 <script>
-import { pickBy } from "lodash";
+import { mapState, mapActions, mapGetters } from "vuex";
 
 export default {
   name: "BuilderPizzaView",
-  props: {
-    selectedDough: {
-      type: String,
-      required: true,
-    },
-    selectedSauce: {
-      type: String,
-      required: true,
-    },
-    selectedIngredients: {
-      type: Object,
-      required: true,
-    },
-  },
   computed: {
-    clearedIngredients() {
-      return pickBy(this.selectedIngredients, (value) => value > 0);
-    },
+    ...mapState("Builder", [
+      "selectedDough",
+      "selectedSauce",
+      "selectedIngredients",
+    ]),
+    ...mapGetters("Builder", ["clearedIngredients"]),
   },
   methods: {
+    ...mapActions("Builder", ["setSelectedIngredients"]),
+
     onDrop(e) {
       const type = e.dataTransfer.getData("ingredientType");
+      const selectedIngredients = this.selectedIngredients;
 
-      this.$eventBus.$emit("increase-ingredient", type);
+      selectedIngredients[type] += 1;
+
+      this.setSelectedIngredients(selectedIngredients);
     },
+
     getFillingClass(ingredient, count = 1) {
       const secondClass = "pizza__filling--second";
       const thirdClass = "pizza__filling--third";

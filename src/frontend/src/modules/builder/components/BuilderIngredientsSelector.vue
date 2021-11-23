@@ -4,11 +4,11 @@
       <p>Основной соус:</p>
 
       <BaseRadio
-        v-for="sauce in sauces"
-        :key="`sauce-${sauce.id}`"
-        v-model="selectedSauce"
-        :value="sauce.type"
-        :label="sauce.name"
+        v-for="sauceType in saucesTypes"
+        :key="`sauce-${sauceType.id}`"
+        v-model="localSelectedSauce"
+        :value="sauceType.type"
+        :label="sauceType.name"
         class="ingredients__input"
       />
     </div>
@@ -18,24 +18,24 @@
 
       <ul class="ingredients__list">
         <li
-          v-for="ingredient in ingredients"
-          :key="`ingredient-${ingredient.id}`"
+          v-for="ingredientType in ingredientsTypes"
+          :key="`ingredient-${ingredientType.id}`"
           class="ingredients__item"
         >
           <span
-            :class="['filling', `filling--${ingredient.type}`]"
-            :draggable="selectedIngredients[ingredient.type] < 3"
-            @dragstart="onDragstart($event, ingredient.type)"
+            :class="['filling', `filling--${ingredientType.type}`]"
+            :draggable="selectedIngredients[ingredientType.type] < 3"
+            @dragstart="onDragstart($event, ingredientType.type)"
           >
-            {{ ingredient.name }}
+            {{ ingredientType.name }}
           </span>
 
           <BaseCounter
-            :value="selectedIngredients[ingredient.type]"
+            :value="selectedIngredients[ingredientType.type]"
             class="ingredients__counter"
             :min="0"
             :max="maxSameIngredientsCount"
-            @input="updateSelectedIngredients(ingredient.type, $event)"
+            @input="updateSelectedIngredients(ingredientType.type, $event)"
           />
         </li>
       </ul>
@@ -43,6 +43,7 @@
   </div>
 </template>
 <script>
+import { mapState, mapActions } from "vuex";
 import BaseCounter from "@/common/components/BaseCounter";
 import BaseRadio from "@/common/components/BaseRadio";
 import { maxSameIngredientsCount } from "../constants";
@@ -50,57 +51,39 @@ import { maxSameIngredientsCount } from "../constants";
 export default {
   name: "BuilderIngredientsSelector",
   components: { BaseCounter, BaseRadio },
-  props: {
-    sauces: {
-      type: Array,
-      required: true,
-    },
-    ingredients: {
-      type: Array,
-      required: true,
-    },
+  created() {
+    this.maxSameIngredientsCount = maxSameIngredientsCount;
   },
-  data() {
-    return {
-      selectedSauce: null,
-      selectedIngredients: {},
-    };
-  },
-  watch: {
-    selectedSauce(value) {
-      this.$emit("sauce-select", value);
-    },
-    selectedIngredients: {
-      deep: true,
-      handler(value) {
-        this.$emit("ingredients-select", value);
+  computed: {
+    ...mapState("Builder", [
+      "selectedSauce",
+      "selectedIngredients",
+      "saucesTypes",
+      "ingredientsTypes",
+    ]),
+
+    localSelectedSauce: {
+      get() {
+        return this.selectedSauce;
+      },
+      set(value) {
+        this.setSelectedSauce(value);
       },
     },
   },
-  created() {
-    this.setDefaults();
-
-    this.maxSameIngredientsCount = maxSameIngredientsCount;
-
-    this.$eventBus.$on("increase-ingredient", (type) => {
-      this.selectedIngredients[type] += 1;
-    });
-  },
   methods: {
-    setDefaults() {
-      this.selectedSauce = this.sauces.find(
-        (sauceItem) => sauceItem.id === 1
-      )?.type;
+    ...mapActions("Builder", ["setSelectedSauce", "setSelectedIngredients"]),
 
-      this.ingredients.forEach((ingredientItem) => {
-        this.$set(this.selectedIngredients, ingredientItem.type, 0);
-      });
-    },
-    updateSelectedIngredients(key, value) {
-      this.selectedIngredients[key] = value;
-    },
     onDragstart(e, ingredientType) {
       e.dataTransfer.setData("ingredientType", ingredientType);
+    },
+
+    updateSelectedIngredients(key, value) {
+      const selectedIngredients = this.selectedIngredients;
+
+      selectedIngredients[key] = value;
+
+      this.setSelectedIngredients(selectedIngredients);
     },
   },
 };

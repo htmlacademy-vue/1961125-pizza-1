@@ -1,5 +1,4 @@
 import { omit } from "lodash";
-import pizza from "@/static/pizza.json";
 import {
   doughTypes,
   sizesTypes,
@@ -31,22 +30,15 @@ export const ingredientsMapper = (array) =>
     type: ingredientsTypes.get(item.name),
   }));
 
-export const getPizzaStore = () => ({
-  dough: doughMapper(pizza.dough),
-  sizes: sizesMapper(pizza.sizes),
-  sauces: sousesMapper(pizza.sauces),
-  ingredients: ingredientsMapper(pizza.ingredients),
-});
-
 export const calculatePrice = (dough, size, sauce, ingredients, store) => {
   const doughSum = dough
-    ? store.dough.find((item) => item.type === dough).price
+    ? store.doughTypes.find((item) => item.type === dough).price
     : 0;
   const sizesMultiplier = size
-    ? store.sizes.find((item) => item.type === size).multiplier
+    ? store.sizesTypes.find((item) => item.type === size).multiplier
     : 0;
   const saucesSum = sauce
-    ? store.sauces.find((item) => item.type === sauce).price
+    ? store.saucesTypes.find((item) => item.type === sauce).price
     : 0;
   let ingredientsSum = 0;
 
@@ -55,7 +47,7 @@ export const calculatePrice = (dough, size, sauce, ingredients, store) => {
 
     if (count === 0) continue;
 
-    const price = store.ingredients.find(
+    const price = store.ingredientsTypes.find(
       (item) => item.type === ingredientType
     ).price;
 
