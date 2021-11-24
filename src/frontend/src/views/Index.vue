@@ -100,11 +100,11 @@ export default {
   },
   methods: {
     ...mapActions("Builder", ["setSelectedPizzaName", "setPizzaDataToDefault"]),
-    ...mapActions("Cart", ["addToList"]),
+    ...mapActions("Cart", ["addToItems"]),
 
     addToCart() {
-      this.addToList(this.pizzaData);
-      this.$router.push({ name: "Cart" });
+      this.addToItems(this.pizzaData);
+      this.setPizzaDataToDefault();
     },
   },
   created() {

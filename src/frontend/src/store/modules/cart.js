@@ -1,31 +1,38 @@
-import { SET_LIST } from "@/store/mutation.types";
+import { SET_CART_ITEMS } from "@/store/mutation.types";
 
 export default {
   namespaced: true,
 
   state: () => ({
-    list: [],
+    items: [],
+    additionalItems: [],
   }),
 
+  getters: {
+    totalPrice: (state) =>
+      state.items.reduce((acc, item) => acc + item.price, 0) +
+      state.additionalItems.reduce((acc, item) => acc + item.price, 0),
+  },
+
   mutations: {
-    [SET_LIST](state, payload) {
-      state.list = payload;
+    [SET_CART_ITEMS](state, payload) {
+      state.items = payload;
     },
   },
 
   actions: {
-    setList({ commit }, payload) {
-      commit(SET_LIST, payload);
+    setItems({ commit }, payload) {
+      commit(SET_CART_ITEMS, payload);
     },
-    addToList({ commit, state }, payload) {
-      const list = state.list;
+    addToItems({ commit, state }, payload) {
+      const items = state.items;
 
-      list.push(payload);
+      items.push(payload);
 
-      commit(SET_LIST, list);
+      commit(SET_CART_ITEMS, items);
     },
-    clearList({ commit }) {
-      commit(SET_LIST, []);
+    clearItems({ commit }) {
+      commit(SET_CART_ITEMS, []);
     },
   },
 };
