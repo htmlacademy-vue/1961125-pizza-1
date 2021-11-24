@@ -1,3 +1,4 @@
+import { uniqueId } from "lodash";
 import { SET_CART_ITEMS } from "@/store/mutation.types";
 
 export default {
@@ -10,8 +11,12 @@ export default {
 
   getters: {
     totalPrice: (state) =>
-      state.items.reduce((acc, item) => acc + item.price, 0) +
-      state.additionalItems.reduce((acc, item) => acc + item.price, 0),
+      state.items.reduce((acc, item) => acc + item.price * item.count, 0) +
+      state.additionalItems.reduce(
+        (acc, item) => acc + item.price * item.count,
+        0
+      ),
+    isEmpty: (state) => !state.items.length && !state.additionalItems.length,
   },
 
   mutations: {
@@ -26,6 +31,10 @@ export default {
     },
     addToItems({ commit, state }, payload) {
       const items = state.items;
+      const item = payload;
+
+      item.id = uniqueId("cart-item-");
+      item.count = 1;
 
       items.push(payload);
 

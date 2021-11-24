@@ -1,5 +1,5 @@
 <template>
-  <div class="counter counter--orange">
+  <div class="counter">
     <button
       type="button"
       class="counter__button counter__button--minus"
@@ -19,7 +19,11 @@
     />
     <button
       type="button"
-      class="counter__button counter__button--plus"
+      :class="[
+        'counter__button',
+        'counter__button--plus',
+        { 'counter__button--orange': isOrangeStyle },
+      ]"
       :disabled="isPlusButtonDisabled"
       @click="add"
     >
@@ -30,7 +34,7 @@
 
 <script>
 export default {
-  name: "ItemCounter",
+  name: "BaseCounter",
   props: {
     value: {
       type: Number,
@@ -47,6 +51,10 @@ export default {
     step: {
       type: Number,
       default: 1,
+    },
+    isOrangeStyle: {
+      type: Boolean,
+      default: false,
     },
   },
   computed: {
