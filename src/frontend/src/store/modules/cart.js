@@ -69,9 +69,16 @@ export default {
 
   actions: {
     init({ dispatch }) {
-      additionalItems.forEach((additionalItem) => {
-        dispatch("addToAdditionalItems", additionalItem);
-      });
+      dispatch("setClearAdditionalItems");
+    },
+    clearCart({ dispatch, commit }) {
+      dispatch("setClearAdditionalItems");
+      commit(SET_CART_ITEMS, []);
+      commit(SET_CART_RECEIVING_TYPE, receivingTypes.NEW);
+      commit(SET_CART_ADDRESS_STREET, "");
+      commit(SET_CART_ADDRESS_BUILDING, "");
+      commit(SET_CART_ADDRESS_APARTMENT, "");
+      commit(SET_CART_PHONE, "");
     },
     setItems({ commit }, payload) {
       commit(SET_CART_ITEMS, payload);
@@ -99,6 +106,12 @@ export default {
     },
     clearItems({ commit }) {
       commit(SET_CART_ITEMS, []);
+    },
+    setClearAdditionalItems({ dispatch }) {
+      dispatch("clearAdditionalItems");
+      additionalItems.forEach((additionalItem) => {
+        dispatch("addToAdditionalItems", additionalItem);
+      });
     },
     setAdditionalItems({ commit }, payload) {
       commit(SET_CART_ADDITIONAL_ITEMS, payload);
