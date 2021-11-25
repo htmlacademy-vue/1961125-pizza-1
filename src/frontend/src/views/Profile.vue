@@ -41,7 +41,7 @@
     </div>
 
     <div class="layout__address">
-      <form class="address-form address-form--opened sheet">
+      <form @submit.prevent class="address-form address-form--opened sheet">
         <div class="address-form__header">
           <b>Адрес №1</b>
         </div>

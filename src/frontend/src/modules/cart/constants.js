@@ -22,3 +22,21 @@ export const pizzaFeatures = new Map([
   ["parmesan", "пармезан"],
   ["blue_cheese", "блю чиз"],
 ]);
+
+export const additionalItems = [
+  {
+    type: "cola",
+    name: "Coca-Cola 0,5 литра",
+    price: 56,
+  },
+  {
+    type: "sauce",
+    name: "Острый соус",
+    price: 30,
+  },
+  {
+    type: "potato",
+    name: "Картошка из печи",
+    price: 56,
+  },
+];

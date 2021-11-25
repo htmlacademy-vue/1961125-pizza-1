@@ -1,4 +1,9 @@
 module.exports = {
+  configureWebpack: {
+    module: {
+      exprContextCritical: false,
+    },
+  },
   css: {
     loaderOptions: {
       sass: {

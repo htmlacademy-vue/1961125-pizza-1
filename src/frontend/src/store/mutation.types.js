@@ -7,4 +7,5 @@ export const SET_SELECTED_SIZE = "setSelectedSize";
 export const SET_SELECTED_SAUCE = "setSelectedSauce";
 export const SET_SELECTED_INGREDIENTS = "setSelectedIngredients";
 export const SET_SELECTED_PIZZA_NAME = "setSelectedPizzaName";
-export const SET_CART_ITEMS = "setList";
+export const SET_CART_ITEMS = "setItems";
+export const SET_CART_ADDITIONAL_ITEMS = "setAdditionalItems";

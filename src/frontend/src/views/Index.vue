@@ -1,6 +1,6 @@
 <template>
   <main class="content" v-if="isPizzaTypesLoaded">
-    <form action="#" method="post">
+    <form @submit.prevent>
       <div class="content__wrapper">
         <h1 class="title title--big">Конструктор пиццы</h1>
 
