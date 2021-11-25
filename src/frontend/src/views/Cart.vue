@@ -14,7 +14,7 @@
           <CartList class="sheet" />
 
           <div class="cart__additional">
-            <AdditionalList />
+            <CartAdditionalList />
           </div>
 
           <div class="cart__form">
@@ -24,35 +24,20 @@
       </div>
     </main>
 
-    <section v-if="!isEmpty" class="footer">
-      <div class="footer__more">
-        <router-link to="/" class="button button--border button--arrow">
-          Хочу еще одну
-        </router-link>
-      </div>
-      <p class="footer__text">
-        Перейти к конструктору<br />чтоб собрать ещё одну пиццу
-      </p>
-      <div class="footer__price">
-        <b>Итого: 2 228 ₽</b>
-      </div>
-
-      <div class="footer__submit">
-        <button type="submit" class="button">Оформить заказ</button>
-      </div>
-    </section>
+    <CartFooter v-if="!isEmpty" />
   </form>
 </template>
 
 <script>
 import { mapGetters } from "vuex";
 import CartList from "@/modules/cart/components/CartList";
-import AdditionalList from "@/modules/cart/components/AdditionalList";
+import CartAdditionalList from "@/modules/cart/components/CartAdditionalList";
 import CartForm from "@/modules/cart/components/CartForm";
+import CartFooter from "@/modules/cart/components/CartFooter";
 
 export default {
   name: "Cart",
-  components: { CartForm, AdditionalList, CartList },
+  components: { CartFooter, CartForm, CartAdditionalList, CartList },
   computed: {
     ...mapGetters("Cart", ["isEmpty"]),
   },

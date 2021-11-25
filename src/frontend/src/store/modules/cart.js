@@ -10,34 +10,11 @@ import {
 } from "@/store/mutation.types";
 import { additionalItems, receivingTypes } from "@/modules/cart/constants";
 
-const testItems = [
-  {
-    dough: "light",
-    size: "normal",
-    sauce: "tomato",
-    ingredients: { ham: 1, onion: 1 },
-    name: "ghbdtn",
-    price: 826,
-    id: "cart-item-1",
-    count: 3,
-  },
-  {
-    dough: "large",
-    size: "big",
-    sauce: "tomato",
-    ingredients: { mushrooms: 2, olives: 1, tomatoes: 1 },
-    name: "test",
-    price: 1428,
-    id: "cart-item-2",
-    count: 3,
-  },
-];
-
 export default {
   namespaced: true,
 
   state: () => ({
-    items: testItems,
+    items: [],
     additionalItems: [],
     receivingType: receivingTypes.NEW,
     phone: "",
@@ -59,6 +36,11 @@ export default {
       !state.additionalItems.filter((item) => item.count > 0).length,
     getItemById: (state) => (itemId) =>
       state.items.find((item) => item.id === itemId),
+    isAddressFormValid: (state) =>
+      (state.receivingType === receivingTypes.NEW &&
+        !!state.addressStreet &&
+        !!state.addressBuilding) ||
+      state.receivingType !== receivingTypes.NEW,
   },
 
   mutations: {
