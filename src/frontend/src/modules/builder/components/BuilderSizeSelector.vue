@@ -1,12 +1,12 @@
 <template>
   <div class="diameter">
     <BaseRadio
-      v-for="sizeType in sizesTypes"
-      :key="`size-${sizeType.id}`"
+      v-for="{ id, type, name } in sizesTypes"
+      :key="`size-${id}`"
       v-model="localSelectedSize"
-      :value="sizeType.type"
-      :label="sizeType.name"
-      :class="['diameter__input', `diameter__input--${sizeType.type}`]"
+      :value="type"
+      :label="name"
+      :class="['diameter__input', `diameter__input--${type}`]"
       is-cleared-styles
     />
   </div>
@@ -17,7 +17,9 @@ import { mapState, mapActions } from "vuex";
 
 export default {
   name: "BuilderSizeSelector",
+
   components: { BaseRadio },
+
   computed: {
     ...mapState("Builder", ["sizesTypes", "selectedSize"]),
 

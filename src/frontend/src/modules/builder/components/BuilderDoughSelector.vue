@@ -1,15 +1,15 @@
 <template>
   <div class="dough">
     <BaseRadio
-      v-for="doughType in doughTypes"
-      :key="`doughItem-${doughType.id}`"
+      v-for="{ id, type, name, description } in doughTypes"
+      :key="`doughItem-${id}`"
       v-model="localSelectedDough"
-      :value="doughType.type"
-      :class="['dough__input', `dough__input--${doughType.type}`]"
+      :value="type"
+      :class="['dough__input', `dough__input--${type}`]"
       is-cleared-styles
     >
-      <b>{{ doughType.name }}</b>
-      <span>{{ doughType.description }}</span>
+      <b>{{ name }}</b>
+      <span>{{ description }}</span>
     </BaseRadio>
   </div>
 </template>
@@ -20,7 +20,9 @@ import BaseRadio from "@/common/components/BaseRadio";
 
 export default {
   name: "BuilderDoughSelector",
+
   components: { BaseRadio },
+
   computed: {
     ...mapState("Builder", ["doughTypes", "selectedDough"]),
 
@@ -33,6 +35,7 @@ export default {
       },
     },
   },
+
   methods: {
     ...mapActions("Builder", ["setSelectedDough"]),
   },

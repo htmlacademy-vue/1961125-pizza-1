@@ -37,7 +37,9 @@ import CartFooter from "@/modules/cart/components/CartFooter";
 
 export default {
   name: "Cart",
+
   components: { CartFooter, CartForm, CartAdditionalList, CartList },
+
   computed: {
     ...mapGetters("Cart", ["isEmpty"]),
   },

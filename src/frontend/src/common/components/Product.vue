@@ -7,10 +7,12 @@
       height="56"
       :alt="name"
     />
+
     <div class="product__text">
       <h2>{{ name }}</h2>
+
       <ul>
-        <li v-for="(feature, index) in features" :key="`feature-${index}`">
+        <li v-for="feature in features" :key="`feature-${feature}`">
           {{ feature }}
         </li>
       </ul>
@@ -21,11 +23,13 @@
 <script>
 export default {
   name: "Product",
+
   props: {
     name: {
       type: String,
       required: true,
     },
+
     features: {
       type: Array,
       default: () => [],

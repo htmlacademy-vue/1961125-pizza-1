@@ -24,7 +24,7 @@ export const pizzaFeatures = new Map([
 ]);
 
 // TODO: принимать additionalItems с бека
-export const additionalItems = [
+export const ADDITIONAL_ITEMS = [
   {
     type: "cola",
     name: "Coca-Cola 0,5 литра",

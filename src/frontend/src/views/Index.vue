@@ -74,6 +74,7 @@ import {
 
 export default {
   name: "Index",
+
   components: {
     BuilderPriceCounter,
     BuilderPizzaView,
@@ -81,13 +82,16 @@ export default {
     BuilderSizeSelector,
     BuilderDoughSelector,
   },
+
   computed: {
     ...mapState("Builder", ["selectedPizzaName"]),
+
     ...mapGetters("Builder", [
       "isPizzaTypesLoaded",
       "isPizzaReadyToBuy",
       "pizzaData",
     ]),
+
     ...mapGetters("Cart", ["getItemById"]),
 
     localSelectedPizzaName: {
@@ -109,15 +113,18 @@ export default {
       return !!this.editingCartItem;
     },
   },
+
   created() {
     this.init();
   },
+
   methods: {
     ...mapActions("Builder", [
       "setSelectedPizzaName",
       "setPizzaDataToDefault",
       "setPizzaData",
     ]),
+
     ...mapActions("Cart", ["addToItems", "editItem"]),
 
     init() {

@@ -5,9 +5,11 @@
         Хочу еще одну
       </router-link>
     </div>
+
     <p class="footer__text">
       Перейти к конструктору<br />чтоб собрать ещё одну пиццу
     </p>
+
     <div class="footer__price">
       <b>Итого: {{ totalPrice }} ₽</b>
     </div>
@@ -40,22 +42,27 @@ import AppPopup from "@/common/components/AppPopup";
 
 export default {
   name: "CartFooter",
+
   components: { AppPopup },
+
   data() {
     return {
       isPopupShowed: false,
     };
   },
+
   computed: {
     ...mapGetters("Cart", ["totalPrice", "isAddressFormValid"]),
     ...mapGetters("Auth", ["isAuth"]),
   },
+
   methods: {
     ...mapActions("Cart", ["clearCart"]),
 
     placeOrder() {
       this.isPopupShowed = true;
     },
+
     goToNextPage() {
       if (this.isAuth) {
         // TODO: добавить ордер в стор

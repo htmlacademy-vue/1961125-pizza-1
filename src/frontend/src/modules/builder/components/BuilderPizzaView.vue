@@ -10,11 +10,13 @@
           :key="`${ingredient}-${index}`"
           :class="getFillingClass(ingredient)"
         ></div>
+
         <div
           v-if="count >= 2"
           :key="`${ingredient}-${index}-second`"
           :class="getFillingClass(ingredient, 2)"
         ></div>
+
         <div
           v-if="count >= 3"
           :key="`${ingredient}-${index}-third`"
@@ -30,6 +32,7 @@ import { mapState, mapActions, mapGetters } from "vuex";
 
 export default {
   name: "BuilderPizzaView",
+
   computed: {
     ...mapState("Builder", [
       "selectedDough",
@@ -38,11 +41,12 @@ export default {
     ]),
     ...mapGetters("Builder", ["clearedIngredients"]),
   },
+
   methods: {
     ...mapActions("Builder", ["setSelectedIngredients"]),
 
-    onDrop(e) {
-      const type = e.dataTransfer.getData("ingredientType");
+    onDrop({ dataTransfer }) {
+      const type = dataTransfer.getData("ingredientType");
       const selectedIngredients = this.selectedIngredients;
 
       selectedIngredients[type] += 1;

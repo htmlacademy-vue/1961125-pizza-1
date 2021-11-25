@@ -4,11 +4,11 @@
       <p>Основной соус:</p>
 
       <BaseRadio
-        v-for="sauceType in saucesTypes"
-        :key="`sauce-${sauceType.id}`"
+        v-for="{ id, type, name } in saucesTypes"
+        :key="`sauce-${id}`"
         v-model="localSelectedSauce"
-        :value="sauceType.type"
-        :label="sauceType.name"
+        :value="type"
+        :label="name"
         class="ingredients__input"
       />
     </div>
@@ -18,24 +18,24 @@
 
       <ul class="ingredients__list">
         <li
-          v-for="ingredientType in ingredientsTypes"
-          :key="`ingredient-${ingredientType.id}`"
+          v-for="{ id, type, name } in ingredientsTypes"
+          :key="`ingredient-${id}`"
           class="ingredients__item"
         >
           <span
-            :class="['filling', `filling--${ingredientType.type}`]"
-            :draggable="selectedIngredients[ingredientType.type] < 3"
-            @dragstart="onDragstart($event, ingredientType.type)"
+            :class="['filling', `filling--${type}`]"
+            :draggable="selectedIngredients[type] < 3"
+            @dragstart="onDragstart($event, type)"
           >
-            {{ ingredientType.name }}
+            {{ name }}
           </span>
 
           <BaseCounter
-            :value="selectedIngredients[ingredientType.type]"
+            :value="selectedIngredients[type]"
             class="ingredients__counter"
             :min="0"
-            :max="maxSameIngredientsCount"
-            @input="updateSelectedIngredients(ingredientType.type, $event)"
+            :max="$options.maxSameIngredientsCount"
+            @input="updateSelectedIngredients(type, $event)"
           />
         </li>
       </ul>
@@ -46,14 +46,13 @@
 import { mapState, mapActions } from "vuex";
 import BaseCounter from "@/common/components/BaseCounter";
 import BaseRadio from "@/common/components/BaseRadio";
-import { maxSameIngredientsCount } from "../constants";
+import { MAX_SAME_INGREDIENTS_COUNT } from "../constants";
 
 export default {
   name: "BuilderIngredientsSelector",
+
   components: { BaseCounter, BaseRadio },
-  created() {
-    this.maxSameIngredientsCount = maxSameIngredientsCount;
-  },
+
   computed: {
     ...mapState("Builder", [
       "selectedSauce",
@@ -71,11 +70,14 @@ export default {
       },
     },
   },
+  created() {
+    this.$options.maxSameIngredientsCount = MAX_SAME_INGREDIENTS_COUNT;
+  },
   methods: {
     ...mapActions("Builder", ["setSelectedSauce", "setSelectedIngredients"]),
 
-    onDragstart(e, ingredientType) {
-      e.dataTransfer.setData("ingredientType", ingredientType);
+    onDragstart({ dataTransfer }, ingredientType) {
+      dataTransfer.setData("ingredientType", ingredientType);
     },
 
     updateSelectedIngredients(key, value) {

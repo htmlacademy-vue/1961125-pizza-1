@@ -8,7 +8,10 @@ import {
   calculatePrice,
   getZeroedIngredients,
 } from "@/modules/builder/helpers";
-import { minPizzaNameLength } from "@/modules/builder/constants";
+import {
+  DEFAULT_PIZZA_STATE,
+  MIN_PIZZA_NAME_LENGTH,
+} from "@/modules/builder/constants";
 import {
   SET_DOUGH_TYPES,
   SET_SIZES_TYPES,
@@ -30,11 +33,11 @@ export default {
     saucesTypes: null,
     ingredientsTypes: null,
 
-    selectedDough: null,
-    selectedSize: null,
-    selectedSauce: null,
-    selectedIngredients: null,
-    selectedPizzaName: "",
+    selectedDough: DEFAULT_PIZZA_STATE.dough,
+    selectedSize: DEFAULT_PIZZA_STATE.size,
+    selectedSauce: DEFAULT_PIZZA_STATE.sauce,
+    selectedIngredients: DEFAULT_PIZZA_STATE.ingredients,
+    selectedPizzaName: DEFAULT_PIZZA_STATE.name,
   }),
 
   getters: {
@@ -45,15 +48,15 @@ export default {
       !!state.ingredientsTypes,
 
     isPizzaReadyToBuy: (state, getters) =>
-      state.selectedPizzaName.length >= minPizzaNameLength &&
+      state.selectedPizzaName.length >= MIN_PIZZA_NAME_LENGTH &&
       Object.keys(getters.clearedIngredients).length > 0,
 
-    calculatedPrice: (state) =>
+    calculatedPrice: (state, getters) =>
       calculatePrice(
         state.selectedDough,
         state.selectedSize,
         state.selectedSauce,
-        state.selectedIngredients,
+        getters.clearedIngredients,
         state
       ),
 
@@ -74,27 +77,35 @@ export default {
     [SET_DOUGH_TYPES](state, payload) {
       state.doughTypes = payload;
     },
+
     [SET_SIZES_TYPES](state, payload) {
       state.sizesTypes = payload;
     },
+
     [SET_SAUCES_TYPES](state, payload) {
       state.saucesTypes = payload;
     },
+
     [SET_INGREDIENTS_TYPES](state, payload) {
       state.ingredientsTypes = payload;
     },
+
     [SET_SELECTED_DOUGH](state, payload) {
       state.selectedDough = payload;
     },
+
     [SET_SELECTED_SIZE](state, payload) {
       state.selectedSize = payload;
     },
+
     [SET_SELECTED_SAUCE](state, payload) {
       state.selectedSauce = payload;
     },
+
     [SET_SELECTED_INGREDIENTS](state, payload) {
       state.selectedIngredients = payload;
     },
+
     [SET_SELECTED_PIZZA_NAME](state, payload) {
       state.selectedPizzaName = payload;
     },
@@ -104,31 +115,16 @@ export default {
     init({ commit }) {
       // TODO: получение данных pizza с бека
 
-      commit(SET_DOUGH_TYPES, Object.freeze(doughMapper(pizza.dough)));
-      commit(SET_SIZES_TYPES, Object.freeze(sizesMapper(pizza.sizes)));
-      commit(SET_SAUCES_TYPES, Object.freeze(sousesMapper(pizza.sauces)));
-      commit(
-        SET_INGREDIENTS_TYPES,
-        Object.freeze(ingredientsMapper(pizza.ingredients))
-      );
+      commit(SET_DOUGH_TYPES, doughMapper(pizza.dough));
+      commit(SET_SIZES_TYPES, sizesMapper(pizza.sizes));
+      commit(SET_SAUCES_TYPES, sousesMapper(pizza.sauces));
+      commit(SET_INGREDIENTS_TYPES, ingredientsMapper(pizza.ingredients));
     },
-    setPizzaDataToDefault({ state, dispatch }) {
-      const dough = state.doughTypes.find(
-        (doughType) => doughType.id === 1
-      )?.type;
-      const size = state.sizesTypes.find((sizeType) => sizeType.id === 1)?.type;
-      const sauce = state.saucesTypes.find(
-        (sauceType) => sauceType.id === 1
-      )?.type;
-      const name = "";
-      const ingredients = {};
 
-      state.ingredientsTypes.forEach((ingredientType) => {
-        ingredients[ingredientType.type] = 0;
-      });
-
-      dispatch("setPizzaData", { dough, size, sauce, ingredients, name });
+    setPizzaDataToDefault({ dispatch }) {
+      dispatch("setPizzaData", DEFAULT_PIZZA_STATE);
     },
+
     setPizzaData({ dispatch }, { dough, size, sauce, ingredients, name }) {
       dispatch("setSelectedDough", dough);
       dispatch("setSelectedSize", size);
@@ -136,23 +132,28 @@ export default {
       dispatch("setSelectedIngredients", ingredients);
       dispatch("setSelectedPizzaName", name);
     },
+
     setSelectedDough({ commit }, payload) {
       commit(SET_SELECTED_DOUGH, payload);
     },
+
     setSelectedSize({ commit }, payload) {
       commit(SET_SELECTED_SIZE, payload);
     },
+
     setSelectedSauce({ commit }, payload) {
       commit(SET_SELECTED_SAUCE, payload);
     },
+
     setSelectedIngredients({ commit, state }, payload = {}) {
       const result = Object.assign(
         getZeroedIngredients(state.ingredientsTypes),
         payload
       );
 
-      commit(SET_SELECTED_INGREDIENTS, Object.assign(result));
+      commit(SET_SELECTED_INGREDIENTS, result);
     },
+
     setSelectedPizzaName({ commit }, payload) {
       commit(SET_SELECTED_PIZZA_NAME, payload);
     },

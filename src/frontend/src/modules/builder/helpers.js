@@ -1,33 +1,33 @@
 import { omit } from "lodash";
 import {
-  doughTypes,
-  sizesTypes,
-  sousesTypes,
-  ingredientsTypes,
+  DOUGH_TYPES,
+  SIZES_TYPES,
+  SOUSES_TYPES,
+  INGREDIENTS_TYPES,
 } from "./constants";
 
 export const doughMapper = (array) =>
   array.map((item) => ({
     ...omit(item, "image"),
-    type: doughTypes.get(item.name),
+    type: DOUGH_TYPES.get(item.name),
   }));
 
 export const sizesMapper = (array) =>
   array.map((item) => ({
     ...omit(item, "image"),
-    type: sizesTypes.get(item.multiplier),
+    type: SIZES_TYPES.get(item.multiplier),
   }));
 
 export const sousesMapper = (array) =>
   array.map((item) => ({
     ...item,
-    type: sousesTypes.get(item.name),
+    type: SOUSES_TYPES.get(item.name),
   }));
 
 export const ingredientsMapper = (array) =>
   array.map((item) => ({
     ...omit(item, "image"),
-    type: ingredientsTypes.get(item.name),
+    type: INGREDIENTS_TYPES.get(item.name),
   }));
 
 export const getZeroedIngredients = (array) => {
@@ -50,19 +50,12 @@ export const calculatePrice = (dough, size, sauce, ingredients, store) => {
   const saucesSum = sauce
     ? store.saucesTypes.find((item) => item.type === sauce).price
     : 0;
-  let ingredientsSum = 0;
-
-  for (const ingredientType in ingredients) {
-    const count = ingredients[ingredientType];
-
-    if (count === 0) continue;
-
-    const price = store.ingredientsTypes.find(
-      (item) => item.type === ingredientType
-    ).price;
-
-    ingredientsSum += count * price;
-  }
+  const ingredientsSum = Object.keys(ingredients).reduce(
+    (sum, ingredientType) =>
+      sum +
+      store.ingredientsTypes.find((item) => item.type === ingredientType).price,
+    0
+  );
 
   return sizesMultiplier * (doughSum + saucesSum + ingredientsSum);
 };

@@ -4,14 +4,14 @@
       <span class="cart-form__label">Получение заказа:</span>
 
       <select class="select" v-model="localReceivingType">
-        <option :value="receivingTypes.BY_SELF">Заберу сам</option>
-        <option :value="receivingTypes.NEW">Новый адрес</option>
+        <option :value="$options.receivingTypes.BY_SELF">Заберу сам</option>
+        <option :value="$options.receivingTypes.NEW">Новый адрес</option>
         <option
-          v-for="address in userAddresses"
-          :key="`address-${address.id}`"
-          :value="receivingTypes.SAVED_ADDRESS"
+          v-for="{ id, name } in userAddresses"
+          :key="`address-${id}`"
+          :value="$options.receivingTypes.SAVED_ADDRESS"
         >
-          {{ address.name }}
+          {{ name }}
         </option>
       </select>
     </label>
@@ -77,6 +77,7 @@ import { receivingTypes } from "../constants";
 
 export default {
   name: "CartForm",
+
   computed: {
     ...mapGetters("Auth", ["isAuth"]),
     ...mapState("Auth", ["userAddresses"]),
@@ -96,6 +97,7 @@ export default {
         this.setReceivingType(value);
       },
     },
+
     localPhone: {
       get() {
         return this.phone;
@@ -104,6 +106,7 @@ export default {
         this.setPhone(value);
       },
     },
+
     localAddressStreet: {
       get() {
         return this.addressStreet;
@@ -112,6 +115,7 @@ export default {
         this.setAddressStreet(value);
       },
     },
+
     localAddressBuilding: {
       get() {
         return this.addressBuilding;
@@ -120,6 +124,7 @@ export default {
         this.setAddressBuilding(value);
       },
     },
+
     localAddressApartment: {
       get() {
         return this.addressApartment;
@@ -135,16 +140,20 @@ export default {
         this.receivingType === receivingTypes.NEW
       );
     },
+
     isAddressInputShowed() {
       return this.receivingType === receivingTypes.NEW;
     },
+
     isAddressInputDisabled() {
       return this.receivingType === receivingTypes.SAVED_ADDRESS;
     },
   },
+
   created() {
-    this.receivingTypes = receivingTypes;
+    this.$options.receivingTypes = receivingTypes;
   },
+
   methods: {
     ...mapActions("Cart", [
       "setReceivingType",
