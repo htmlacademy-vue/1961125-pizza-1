@@ -2,15 +2,48 @@ import { uniqueId, sortBy } from "lodash";
 import {
   SET_CART_ITEMS,
   SET_CART_ADDITIONAL_ITEMS,
+  SET_CART_RECEIVING_TYPE,
+  SET_CART_ADDRESS_STREET,
+  SET_CART_ADDRESS_BUILDING,
+  SET_CART_ADDRESS_APARTMENT,
+  SET_CART_PHONE,
 } from "@/store/mutation.types";
-import { additionalItems } from "@/modules/cart/constants";
+import { additionalItems, receivingTypes } from "@/modules/cart/constants";
+
+const testItems = [
+  {
+    dough: "light",
+    size: "normal",
+    sauce: "tomato",
+    ingredients: { ham: 1, onion: 1 },
+    name: "ghbdtn",
+    price: 826,
+    id: "cart-item-1",
+    count: 3,
+  },
+  {
+    dough: "large",
+    size: "big",
+    sauce: "tomato",
+    ingredients: { mushrooms: 2, olives: 1, tomatoes: 1 },
+    name: "test",
+    price: 1428,
+    id: "cart-item-2",
+    count: 3,
+  },
+];
 
 export default {
   namespaced: true,
 
   state: () => ({
-    items: [],
+    items: testItems,
     additionalItems: [],
+    receivingType: receivingTypes.NEW,
+    phone: "",
+    addressStreet: "",
+    addressBuilding: "",
+    addressApartment: "",
   }),
 
   getters: {
@@ -34,6 +67,21 @@ export default {
     },
     [SET_CART_ADDITIONAL_ITEMS](state, payload) {
       state.additionalItems = payload;
+    },
+    [SET_CART_RECEIVING_TYPE](state, payload) {
+      state.receivingType = payload;
+    },
+    [SET_CART_ADDRESS_STREET](state, payload) {
+      state.addressStreet = payload;
+    },
+    [SET_CART_PHONE](state, payload) {
+      state.phone = payload;
+    },
+    [SET_CART_ADDRESS_BUILDING](state, payload) {
+      state.addressBuilding = payload;
+    },
+    [SET_CART_ADDRESS_APARTMENT](state, payload) {
+      state.addressApartment = payload;
     },
   },
 
@@ -86,6 +134,21 @@ export default {
     },
     clearAdditionalItems({ commit }) {
       commit(SET_CART_ADDITIONAL_ITEMS, []);
+    },
+    setReceivingType({ commit }, payload) {
+      commit(SET_CART_RECEIVING_TYPE, payload);
+    },
+    setAddressStreet({ commit }, payload) {
+      commit(SET_CART_ADDRESS_STREET, payload);
+    },
+    setPhone({ commit }, payload) {
+      commit(SET_CART_PHONE, payload);
+    },
+    setAddressBuilding({ commit }, payload) {
+      commit(SET_CART_ADDRESS_BUILDING, payload);
+    },
+    setAddressApartment({ commit }, payload) {
+      commit(SET_CART_ADDRESS_APARTMENT, payload);
     },
   },
 };

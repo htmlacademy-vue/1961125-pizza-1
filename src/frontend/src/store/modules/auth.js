@@ -1,4 +1,12 @@
 export default {
   namespaced: true,
-  state: () => ({}),
+
+  state: () => ({
+    user: null,
+    userAddresses: [],
+  }),
+
+  getters: {
+    isAuth: (state) => !!state.user?.id,
+  },
 };

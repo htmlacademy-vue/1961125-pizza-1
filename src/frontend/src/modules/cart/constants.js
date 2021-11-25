@@ -41,3 +41,9 @@ export const additionalItems = [
     price: 56,
   },
 ];
+
+export const receivingTypes = {
+  BY_SELF: "bySelf",
+  NEW: "new",
+  SAVED_ADDRESS: "address",
+};
