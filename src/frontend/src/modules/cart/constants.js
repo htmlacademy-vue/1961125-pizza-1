@@ -23,6 +23,7 @@ export const pizzaFeatures = new Map([
   ["blue_cheese", "блю чиз"],
 ]);
 
+// TODO: принимать additionalItems с бека
 export const additionalItems = [
   {
     type: "cola",

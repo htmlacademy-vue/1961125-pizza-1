@@ -1,42 +1,20 @@
-import { uniqueId } from "lodash";
+import { uniqueId, sortBy } from "lodash";
 import {
   SET_CART_ITEMS,
   SET_CART_ADDITIONAL_ITEMS,
 } from "@/store/mutation.types";
 import { additionalItems } from "@/modules/cart/constants";
 
-const testItems = [
-  {
-    dough: "light",
-    size: "normal",
-    sauce: "tomato",
-    ingredients: { ham: 1, onion: 1 },
-    name: "ghbdtn",
-    price: 826,
-    id: "cart-item-1",
-    count: 3,
-  },
-  {
-    dough: "large",
-    size: "big",
-    sauce: "tomato",
-    ingredients: { mushrooms: 2, olives: 1, tomatoes: 1 },
-    name: "test",
-    price: 1428,
-    id: "cart-item-2",
-    count: 3,
-  },
-];
-
 export default {
   namespaced: true,
 
   state: () => ({
-    items: testItems,
+    items: [],
     additionalItems: [],
   }),
 
   getters: {
+    getSortedItems: (state) => sortBy(state.items, "id"),
     totalPrice: (state) =>
       state.items.reduce((acc, item) => acc + item.price * item.count, 0) +
       state.additionalItems.reduce(
@@ -45,7 +23,9 @@ export default {
       ),
     isEmpty: (state) =>
       !state.items.length &&
-      !state.additionalItems.filter((item) => item.count > 0),
+      !state.additionalItems.filter((item) => item.count > 0).length,
+    getItemById: (state) => (itemId) =>
+      state.items.find((item) => item.id === itemId),
   },
 
   mutations: {
@@ -74,6 +54,16 @@ export default {
       item.count = 1;
 
       items.push(payload);
+
+      commit(SET_CART_ITEMS, items);
+    },
+    editItem({ getters, state, commit }, { itemId, itemData }) {
+      const item = getters.getItemById(itemId);
+      const items = state.items.filter((item) => item.id !== itemId);
+
+      Object.assign(item, itemData);
+
+      items.push(item);
 
       commit(SET_CART_ITEMS, items);
     },

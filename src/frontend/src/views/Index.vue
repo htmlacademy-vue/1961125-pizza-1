@@ -88,6 +88,7 @@ export default {
       "isPizzaReadyToBuy",
       "pizzaData",
     ]),
+    ...mapGetters("Cart", ["getItemById"]),
 
     localSelectedPizzaName: {
       get() {
@@ -97,18 +98,47 @@ export default {
         this.setSelectedPizzaName(value);
       },
     },
-  },
-  methods: {
-    ...mapActions("Builder", ["setSelectedPizzaName", "setPizzaDataToDefault"]),
-    ...mapActions("Cart", ["addToItems"]),
 
-    addToCart() {
-      this.addToItems(this.pizzaData);
-      this.setPizzaDataToDefault();
+    editingCartItem() {
+      const cartItemId = this.$route.query.cartItemId;
+
+      return this.getItemById(cartItemId) || null;
+    },
+
+    isEditMode() {
+      return !!this.editingCartItem;
     },
   },
   created() {
-    this.setPizzaDataToDefault();
+    this.init();
+  },
+  methods: {
+    ...mapActions("Builder", [
+      "setSelectedPizzaName",
+      "setPizzaDataToDefault",
+      "setPizzaData",
+    ]),
+    ...mapActions("Cart", ["addToItems", "editItem"]),
+
+    init() {
+      if (this.isEditMode) {
+        this.setPizzaData(this.editingCartItem);
+      } else {
+        this.setPizzaDataToDefault();
+      }
+    },
+
+    addToCart() {
+      if (this.isEditMode) {
+        this.editItem({
+          itemId: this.editingCartItem.id,
+          itemData: this.pizzaData,
+        });
+      } else {
+        this.addToItems(this.pizzaData);
+        this.setPizzaDataToDefault();
+      }
+    },
   },
 };
 </script>

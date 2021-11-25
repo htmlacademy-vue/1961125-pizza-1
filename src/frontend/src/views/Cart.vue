@@ -85,7 +85,7 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
+import { mapGetters } from "vuex";
 import CartList from "@/modules/cart/components/CartList";
 import AdditionalList from "@/modules/cart/components/AdditionalList";
 
@@ -94,12 +94,6 @@ export default {
   components: { AdditionalList, CartList },
   computed: {
     ...mapGetters("Cart", ["isEmpty"]),
-  },
-  methods: {
-    ...mapActions("Cart", ["init"]),
-  },
-  created() {
-    this.init();
   },
 };
 </script>

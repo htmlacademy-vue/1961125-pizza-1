@@ -12,10 +12,16 @@ export default {
   name: "App",
   components: { AppLayout },
   created() {
-    this.init();
+    this.builderInit();
+    this.cartInit();
   },
   methods: {
-    ...mapActions("Builder", ["init"]),
+    ...mapActions("Builder", {
+      builderInit: "init",
+    }),
+    ...mapActions("Cart", {
+      cartInit: "init",
+    }),
   },
 };
 </script>

@@ -19,7 +19,7 @@
 
       <BaseCounter
         :value="item.count"
-        :min="0"
+        :min="1"
         class="cart-list__counter"
         is-orange-style
         @input="updateCartItemCount(item.id, $event)"
@@ -30,14 +30,16 @@
       </div>
 
       <div class="cart-list__button">
-        <button type="button" class="cart-list__edit">Изменить</button>
+        <button type="button" class="cart-list__edit" @click="editItem(item)">
+          Изменить
+        </button>
       </div>
     </li>
   </ul>
 </template>
 
 <script>
-import { mapState, mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 import Product from "@/common/components/Product";
 import BaseCounter from "@/common/components/BaseCounter";
 import { pizzaFeatures } from "../constants";
@@ -46,7 +48,9 @@ export default {
   name: "CartList",
   components: { BaseCounter, Product },
   computed: {
-    ...mapState("Cart", ["items"]),
+    ...mapGetters("Cart", {
+      items: "getSortedItems",
+    }),
   },
   methods: {
     ...mapActions("Cart", ["setItems"]),
@@ -68,6 +72,10 @@ export default {
       return Object.keys(ingredients)
         .map((type) => this.getPizzaFeatureTranslate(type))
         .join(", ");
+    },
+
+    editItem(item) {
+      this.$router.push({ path: "/", query: { cartItemId: item.id } });
     },
   },
 };

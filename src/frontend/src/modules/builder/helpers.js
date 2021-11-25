@@ -30,6 +30,16 @@ export const ingredientsMapper = (array) =>
     type: ingredientsTypes.get(item.name),
   }));
 
+export const getZeroedIngredients = (array) => {
+  const result = {};
+
+  array.forEach((item) => {
+    result[item.type] = 0;
+  });
+
+  return result;
+};
+
 export const calculatePrice = (dough, size, sauce, ingredients, store) => {
   const doughSum = dough
     ? store.doughTypes.find((item) => item.type === dough).price
