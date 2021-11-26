@@ -1,56 +1,38 @@
+import { getView } from "@/common/helpers";
+
 export default [
   {
     path: "/",
     name: "Index",
-    component: () => import("../views/Index.vue"),
+    component: getView("Index"),
     meta: { layout: "AppLayoutDefault" },
   },
+
   {
     path: "/cart",
     name: "Cart",
-    component: () => import("../views/Cart.vue"),
+    component: getView("Cart"),
     meta: { layout: "AppLayoutDefault" },
   },
+
   {
     path: "/orders",
     name: "Orders",
-    component: () => import("../views/Orders.vue"),
-    meta: {
-      layout: "AppLayoutSidebar",
-      sidebarLinks: [
-        {
-          to: "/orders",
-          label: "История заказов",
-        },
-        {
-          to: "/profile",
-          label: "Мои данные",
-        },
-      ],
-    },
+    component: getView("Orders"),
+    meta: { layout: "AppLayoutSidebar" },
   },
+
   {
     path: "/profile",
     name: "Profile",
-    component: () => import("../views/Profile.vue"),
-    meta: {
-      layout: "AppLayoutSidebar",
-      sidebarLinks: [
-        {
-          to: "/orders",
-          label: "История заказов",
-        },
-        {
-          to: "/profile",
-          label: "Мои данные",
-        },
-      ],
-    },
+    component: getView("Profile"),
+    meta: { layout: "AppLayoutSidebar" },
   },
+
   {
     path: "/login",
     name: "Login",
-    component: () => import("../views/Login.vue"),
+    component: getView("Login"),
     meta: { layout: "AppLayoutEmpty" },
   },
 ];

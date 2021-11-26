@@ -4,11 +4,11 @@
       <p>Основной соус:</p>
 
       <BaseRadio
-        v-for="sauce in sauces"
-        :key="`sauce-${sauce.id}`"
-        v-model="selectedSauce"
-        :value="sauce.type"
-        :label="sauce.name"
+        v-for="{ id, type, name } in saucesTypes"
+        :key="`sauce-${id}`"
+        v-model="localSelectedSauce"
+        :value="type"
+        :label="name"
         class="ingredients__input"
       />
     </div>
@@ -18,24 +18,24 @@
 
       <ul class="ingredients__list">
         <li
-          v-for="ingredient in ingredients"
-          :key="`ingredient-${ingredient.id}`"
+          v-for="{ id, type, name } in ingredientsTypes"
+          :key="`ingredient-${id}`"
           class="ingredients__item"
         >
           <span
-            :class="['filling', `filling--${ingredient.type}`]"
-            :draggable="selectedIngredients[ingredient.type] < 3"
-            @dragstart="onDragstart($event, ingredient.type)"
+            :class="['filling', `filling--${type}`]"
+            :draggable="selectedIngredients[type] < 3"
+            @dragstart="onDragstart($event, type)"
           >
-            {{ ingredient.name }}
+            {{ name }}
           </span>
 
           <BaseCounter
-            :value="selectedIngredients[ingredient.type]"
+            :value="selectedIngredients[type]"
             class="ingredients__counter"
             :min="0"
-            :max="maxSameIngredientsCount"
-            @input="updateSelectedIngredients(ingredient.type, $event)"
+            :max="$options.maxSameIngredientsCount"
+            @input="updateSelectedIngredients(type, $event)"
           />
         </li>
       </ul>
@@ -43,64 +43,49 @@
   </div>
 </template>
 <script>
+import { mapState, mapActions } from "vuex";
 import BaseCounter from "@/common/components/BaseCounter";
 import BaseRadio from "@/common/components/BaseRadio";
-import { maxSameIngredientsCount } from "../constants";
+import { MAX_SAME_INGREDIENTS_COUNT } from "../constants";
 
 export default {
   name: "BuilderIngredientsSelector",
+
   components: { BaseCounter, BaseRadio },
-  props: {
-    sauces: {
-      type: Array,
-      required: true,
-    },
-    ingredients: {
-      type: Array,
-      required: true,
-    },
-  },
-  data() {
-    return {
-      selectedSauce: null,
-      selectedIngredients: {},
-    };
-  },
-  watch: {
-    selectedSauce(value) {
-      this.$emit("sauce-select", value);
-    },
-    selectedIngredients: {
-      deep: true,
-      handler(value) {
-        this.$emit("ingredients-select", value);
+
+  computed: {
+    ...mapState("Builder", [
+      "selectedSauce",
+      "selectedIngredients",
+      "saucesTypes",
+      "ingredientsTypes",
+    ]),
+
+    localSelectedSauce: {
+      get() {
+        return this.selectedSauce;
+      },
+      set(value) {
+        this.setSelectedSauce(value);
       },
     },
   },
   created() {
-    this.setDefaults();
-
-    this.maxSameIngredientsCount = maxSameIngredientsCount;
-
-    this.$eventBus.$on("increase-ingredient", (type) => {
-      this.selectedIngredients[type] += 1;
-    });
+    this.$options.maxSameIngredientsCount = MAX_SAME_INGREDIENTS_COUNT;
   },
   methods: {
-    setDefaults() {
-      this.selectedSauce = this.sauces.find(
-        (sauceItem) => sauceItem.id === 1
-      )?.type;
+    ...mapActions("Builder", ["setSelectedSauce", "setSelectedIngredients"]),
 
-      this.ingredients.forEach((ingredientItem) => {
-        this.$set(this.selectedIngredients, ingredientItem.type, 0);
-      });
+    onDragstart({ dataTransfer }, ingredientType) {
+      dataTransfer.setData("ingredientType", ingredientType);
     },
+
     updateSelectedIngredients(key, value) {
-      this.selectedIngredients[key] = value;
-    },
-    onDragstart(e, ingredientType) {
-      e.dataTransfer.setData("ingredientType", ingredientType);
+      const selectedIngredients = this.selectedIngredients;
+
+      selectedIngredients[key] = value;
+
+      this.setSelectedIngredients(selectedIngredients);
     },
   },
 };

@@ -10,24 +10,25 @@
     </router-link>
 
     <router-link
-      v-for="(link, index) in links"
-      :key="`sidebar-link-${index}`"
+      v-for="{ to, label } in $options.sidebarLinks"
+      :key="`sidebar-link-${to}`"
       class="layout__link"
       active-class="layout__link--active"
-      :to="link.to"
+      :to="to"
     >
-      {{ link.label }}
+      {{ label }}
     </router-link>
   </div>
 </template>
 
 <script>
+import { sidebarLinks } from "@/common/constants";
+
 export default {
   name: "AppSidebar",
-  computed: {
-    links() {
-      return this.$route.meta?.sidebarLinks || [];
-    },
+
+  created() {
+    this.$options.sidebarLinks = sidebarLinks;
   },
 };
 </script>
